@@ -23,4 +23,11 @@ red() {
   printf "\033[31m%s\033[0m" "$*"
 }
 
+# Required tools: Node.js, npx
+
+# Ensure Node.js and npx are installed
+if ! command -v node >/dev/null 2>&1 || ! command -v npx >/dev/null 2>&1; then
+  error "Error: Node.js and npx are required but not installed."
+fi
+
 info "$(green "Installation complete!") 🎉"
