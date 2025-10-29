@@ -128,4 +128,13 @@ fi
 info "Adding $(blue "Shopify CLI") 🛍️ to project dependencies..."
 pnpm add -D @shopify/cli
 
+# Add foreman to the project dependencies
+info "Adding $(blue "foreman") 👨‍💼 to project dependencies..."
+if [ ! -f Gemfile ]; then
+  bundle init
+fi
+if ! grep -q "foreman" Gemfile; then
+  bundle add foreman
+fi
+
 info "$(green "Installation complete!") 🎉"
