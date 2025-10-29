@@ -117,4 +117,15 @@ fi
 info "Installing tool dependencies..."
 $package_manager install
 
+# Ensure tools are available in PATH by reshimming/reloading
+if [ "$package_manager" = "mise" ]; then
+  eval "$(mise env)"
+elif [ "$package_manager" = "asdf" ]; then
+  eval "$(asdf exec env)"
+fi
+
+# Add Shopify CLI to the project dependencies
+info "Adding $(blue "Shopify CLI") 🛍️ to project dependencies..."
+pnpm add -D @shopify/cli
+
 info "$(green "Installation complete!") 🎉"
