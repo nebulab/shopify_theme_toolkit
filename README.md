@@ -13,3 +13,7 @@ To use Shopify Theme Toolkit, you need to have the following tools installed on 
 ```sh
 curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | sh
 ```
+
+## Features
+
+- Theme scaffolding: Quickly create a new Shopify theme with a skeleton structure using the default Shopify CLI command.
