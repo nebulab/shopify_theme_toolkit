@@ -187,4 +187,30 @@ if [ ! -f ".theme-check.yml" ]; then
   pnpm shopify theme check --init
 fi
 
+# Create bin/dev script using foreman to run the Shopify theme dev server
+info "Creating $(blue "bin/dev") script 💻 ..."
+mkdir -p bin
+if [ -f bin/dev ]; then
+  info "$(blue "bin/dev") script already exists. Skipping creation."
+else
+  cat << 'EOF' > bin/dev
+#!/bin/sh
+
+exec foreman start -f Procfile.dev "$@"
+EOF
+  chmod +x bin/dev
+  info "$(blue "bin/dev") script created successfully."
+fi
+
+# Create Procfile.dev for foreman
+info "Creating $(blue "Procfile.dev") 📑 ..."
+if [ -f Procfile.dev ]; then
+  info "$(blue "Procfile.dev") already exists. Skipping creation."
+else
+  touch Procfile.dev
+  echo "web: pnpm shopify theme dev" >> Procfile.dev
+  info "$(blue "Procfile.dev") created successfully."
+fi
+
 info "$(green "Installation complete!") 🎉"
+info "To start the development server run 👉: $(green "cd $THEME_NAME && bin/dev")"
