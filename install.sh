@@ -212,5 +212,44 @@ else
   info "$(blue "Procfile.dev") created successfully."
 fi
 
+# Check if Tailwind CSS is installed. If not, prompt the user to install it
+if ! grep -q "tailwindcss" package.json; then
+  # Ask the user if they want to install Tailwind CSS
+  info "Do you want to install $(blue "Tailwind CSS") for styling 💇‍♀️? ($(green "y")/$(red "N"))"
+  read INSTALL_TAILWIND </dev/tty
+  if [[ " ${YES_REPLIES[*]} " =~ " ${INSTALL_TAILWIND} " ]]; then
+    info "Installing $(blue "Tailwind CSS")..."
+    pnpm add -D tailwindcss @tailwindcss/cli
+    touch assets/tailwind.css
+    echo '@import "tailwindcss";' >> assets/tailwind.css
+  fi
+fi
+
+# Add Tailwind CSS build process to Procfile.dev
+if grep -q "tailwindcss" package.json; then
+  # Search for the Tailwind CSS input file in assets folder
+  TAILWIND_INPUT_FILE=$(find assets -type f -name "*tailwind*.css" ! -name "*output*")
+  if [ -n "$TAILWIND_INPUT_FILE" ]; then
+    # Add Tailwind CSS build command to Procfile.dev if not already present
+    if ! grep -q "tailwindcss" Procfile.dev; then
+      echo "tailwind: pnpm tailwindcss -i ./$TAILWIND_INPUT_FILE -o ./assets/tailwind-output.css --watch" >> Procfile.dev
+      info "Added $(blue "Tailwind CSS") build process to $(blue "Procfile.dev")."
+    else
+      info "$(blue "Tailwind CSS") build process already exists in $(blue "Procfile.dev")."
+    fi
+  else
+    error "Error: Unable to find Tailwind CSS input file in assets folder. Please ensure you have a Tailwind CSS file with 'tailwind' in its name inside the assets directory."
+  fi
+
+  # Check the Tailwind CSS output file in theme.liquid layout
+  if ! grep -q "tailwind-output.css" "layout/theme.liquid"; then
+    info "Adding Tailwind CSS output file to layout/theme.liquid..."
+    # Search for the first element containing "| asset_url | stylesheet_tag" and insert after it
+    sed -i '' '1,/| asset_url | stylesheet_tag/ { /| asset_url | stylesheet_tag/ a\
+    {{ "tailwind-output.css" | asset_url | stylesheet_tag }}
+    }' layout/theme.liquid
+  fi
+fi
+
 info "$(green "Installation complete!") 🎉"
 info "To start the development server run 👉: $(green "cd $THEME_NAME && bin/dev")"

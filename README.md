@@ -39,6 +39,7 @@ curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/
   - Lighthouse CI Workflow: Runs Lighthouse audits on your theme to ensure optimal performance and accessibility (https://github.com/marketplace/actions/run-lighthouse-ci-on-shopify-theme).
   - PR Theme Management Workflow: Manages theme previews for pull requests, allowing for easy testing and review of changes (https://github.com/marketplace/actions/shopify-pr-theme-preview).
 - Foreman default setup: A default Procfile for running the Shopify theme dev server using bin/dev command.
+- Optional Tailwind CSS integration: Ask the user if they want to install Tailwind CSS if not detected in your package.json. Then, the installation script automatically configures the build process and includes the generated CSS in your theme layout.
 
 ## GitHub Actions Requirements
 
