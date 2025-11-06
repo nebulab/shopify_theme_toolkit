@@ -22,16 +22,21 @@ You can pass the following environment variables to customize the installation:
 
 - `RUBY_VERSION`: Specify a Ruby version (default: latest)
 - `PNPM_VERSION`: Specify a pnpm version (default: latest)
+- `USE_CURRENT_DIR`: Set to `true` to skip theme scaffolding and install in the current directory.
 
-Example:
+Examples:
 
 ```sh
 curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | RUBY_VERSION=3.1.2 bash -s
 ```
 
+```sh
+curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | USE_CURRENT_DIR=true bash -s
+```
+
 ## Features
 
-- Theme scaffolding: Quickly create a new Shopify theme with a skeleton structure using the default Shopify CLI command.
+- Theme management: Quickly create a new Shopify theme using the default Shopify CLI command, or use any existing theme directory.
 - Tools file: A pre-configured tools file to manage your development dependencies using mise or asdf.
 - Shopify CLI integration: Seamless integration with the Shopify CLI for theme development and deployment.
 - GitHub Actions workflows for automated theme checking and testing:

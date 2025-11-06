@@ -52,36 +52,42 @@ else
   error "Error: Neither 'mise' nor 'asdf' is installed. Please install one of them to manage tool versions."
 fi
 
-# Ask for the Shopify theme name
-info "Enter the name of a new or existing Shopify theme 💬:"
-read THEME_NAME </dev/tty
-
-# Check if the theme name is provided
-if [ -z "$THEME_NAME" ]; then
-  error "Error: Theme name cannot be empty."
-fi
-
-# Check if the theme directory already exists
-if [ -d "$THEME_NAME" ]; then
-  info "Theme folder $(blue "$THEME_NAME") already exists."
-
-  # Ask the user if they want to use the existing folder
-  info "Do you want to use the existing folder❔ ($(green "y")/$(red "N"))"
-  read USE_EXISTING </dev/tty
-  if [[ " ${YES_REPLIES[*]} " =~ " ${USE_EXISTING} " ]]; then
-    info "Using existing folder $(blue "$THEME_NAME")."
-  else
-    info "$(red "Exiting without making changes.")"
-    exit 0
-  fi
+# If USE_CURRENT_DIR is set, use the current directory as theme name
+if [ "${USE_CURRENT_DIR:-}" = "true" ]; then
+  THEME_NAME=$(basename "$PWD")
+  info "Using current directory as theme name: $(blue "$THEME_NAME")"
 else
-  # Create the theme using Shopify CLI with the provided name
-  info "Creating Shopify theme $(blue "$THEME_NAME")..."
-  npx @shopify/cli@latest theme init "$THEME_NAME"
-fi
+  # Ask for the Shopify theme name
+  info "Enter the name of a new or existing Shopify theme 💬:"
+  read THEME_NAME </dev/tty
 
-# Navigate into the theme directory
-cd "$THEME_NAME" || { error "Failed to enter directory '$THEME_NAME'"; }
+  # Check if the theme name is provided
+  if [ -z "$THEME_NAME" ]; then
+    error "Error: Theme name cannot be empty."
+  fi
+
+  # Check if the theme directory already exists
+  if [ -d "$THEME_NAME" ]; then
+    info "Theme folder $(blue "$THEME_NAME") already exists."
+
+    # Ask the user if they want to use the existing folder
+    info "Do you want to use the existing folder❔ ($(green "y")/$(red "N"))"
+    read USE_EXISTING </dev/tty
+    if [[ " ${YES_REPLIES[*]} " =~ " ${USE_EXISTING} " ]]; then
+      info "Using existing folder $(blue "$THEME_NAME")."
+    else
+      info "$(red "Exiting without making changes.")"
+      exit 0
+    fi
+  else
+    # Create the theme using Shopify CLI with the provided name
+    info "Creating Shopify theme $(blue "$THEME_NAME")..."
+    npx @shopify/cli@latest theme init "$THEME_NAME"
+  fi
+
+  # Navigate into the theme directory
+  cd "$THEME_NAME" || { error "Failed to enter directory '$THEME_NAME'"; }
+fi
 
 # Create .tool-versions file if it doesn't exist
 if [ ! -f .tool-versions ]; then
@@ -117,7 +123,7 @@ if ! grep -q "^pnpm " .tool-versions; then
   else
     info "Using pnpm version: $(blue "$pnpm_version") 🧱"
   fi
-  
+
   echo "pnpm $pnpm_version" >> .tool-versions
 else
   info "$(blue "pnpm") version already specified in .tool-versions."
@@ -252,4 +258,8 @@ if grep -q "tailwindcss" package.json; then
 fi
 
 info "$(green "Installation complete!") 🎉"
-info "To start the development server run 👉: $(green "cd $THEME_NAME && bin/dev")"
+if [ "${USE_CURRENT_DIR:-}" = "true" ]; then
+  info "To start the development server run 👉: $(green "bin/dev")"
+else
+  info "To start the development server run 👉: $(green "cd $THEME_NAME && bin/dev")"
+fi
