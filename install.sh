@@ -144,6 +144,25 @@ fi
 info "Adding $(blue "Shopify CLI") 🛍️ to project dependencies..."
 pnpm add -D @shopify/cli
 
+# Create .env file if it doesn't exist
+if [ ! -f .env ]; then
+  info "Creating $(blue ".env") file..."
+  touch .env
+fi
+
+# Add .env to .gitignore if not already present
+if [ -f .gitignore ] && ! grep -q "^.env$" .gitignore; then
+  info "Adding $(blue ".env") to .gitignore..."
+  echo ".env" >> .gitignore
+fi
+
+# Add SHOPIFY_FLAG_STORE environment variable to .env file
+store_url="${STORE_URL:-'<your_store_name>'}"
+if ! grep -q "^SHOPIFY_FLAG_STORE=" .env; then
+  info "Adding $(blue "SHOPIFY_FLAG_STORE") environment variable to .env file..."
+  echo "SHOPIFY_FLAG_STORE=$store_url" >> .env
+fi
+
 # Add foreman to the project dependencies
 info "Adding $(blue "foreman") 👨‍💼 to project dependencies..."
 if [ ! -f Gemfile ]; then

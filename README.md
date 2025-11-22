@@ -23,6 +23,7 @@ You can pass the following environment variables to customize the installation:
 - `RUBY_VERSION`: Specify a Ruby version (default: latest)
 - `PNPM_VERSION`: Specify a pnpm version (default: latest)
 - `USE_CURRENT_DIR`: Set to `true` to skip theme scaffolding and install in the current directory.
+- `STORE_URL`: It can be the store prefix (example) or the full myshopify.com URL (example.myshopify.com, https://example.myshopify.com).
 
 Examples:
 
@@ -32,6 +33,10 @@ curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/
 
 ```sh
 curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | USE_CURRENT_DIR=true bash -s
+```
+
+```sh
+curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | STORE_URL=example-dev-store bash -s
 ```
 
 ## Features
