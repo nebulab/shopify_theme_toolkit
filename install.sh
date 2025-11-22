@@ -52,6 +52,17 @@ else
   error "Error: Neither 'mise' nor 'asdf' is installed. Please install one of them to manage tool versions."
 fi
 
+# Check for the STORE_URL presence
+store_url="${STORE_URL:-}"
+if [ -z "$store_url" ]; then
+  info "To proceed, please provide your Shopify store URL where the theme will be installed."
+  info "It can be the store prefix (example) or the full myshopify.com URL (example.myshopify.com, https://example.myshopify.com) 💬:"
+  read store_url </dev/tty
+  if [ -z "$store_url" ]; then
+    error "Error: STORE_URL is required to proceed."
+  fi
+fi
+
 # If USE_CURRENT_DIR is set, use the current directory as theme name
 if [ "${USE_CURRENT_DIR:-}" = "true" ]; then
   THEME_NAME=$(basename "$PWD")
@@ -143,6 +154,24 @@ fi
 # Add Shopify CLI to the project dependencies
 info "Adding $(blue "Shopify CLI") 🛍️ to project dependencies..."
 pnpm add -D @shopify/cli
+
+# Create .env file if it doesn't exist
+if [ ! -f .env ]; then
+  info "Creating $(blue ".env") file..."
+  touch .env
+fi
+
+# Add .env to .gitignore if not already present
+if [ -f .gitignore ] && ! grep -q "^.env$" .gitignore; then
+  info "Adding $(blue ".env") to .gitignore..."
+  echo ".env" >> .gitignore
+fi
+
+# Add SHOPIFY_FLAG_STORE environment variable to .env file
+if ! grep -q "^SHOPIFY_FLAG_STORE=" .env; then
+  info "Adding $(blue "SHOPIFY_FLAG_STORE") environment variable to .env file..."
+  echo "SHOPIFY_FLAG_STORE=$store_url" >> .env
+fi
 
 # Add foreman to the project dependencies
 info "Adding $(blue "foreman") 👨‍💼 to project dependencies..."
