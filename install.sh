@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+SKELETON_THEME_URL="https://github.com/Shopify/skeleton-theme"
+HORIZON_THEME_URL="https://github.com/Shopify/horizon"
 YES_REPLIES=("y" "Y" "yes" "YES" "Yes")
 
 # Logging helpers
@@ -91,9 +93,49 @@ else
       exit 0
     fi
   else
+    if [ -z "${THEME_TEMPLATE_REPO:-}" ]; then
+      # Ask which theme template to use
+      info "Select a theme template to use:"
+      info "$(blue "1") - Skeleton (${SKELETON_THEME_URL})"
+      info "$(blue "2") - Horizon (${HORIZON_THEME_URL})"
+      info "$(blue "3") - Custom (will ask for a GitHub repository URL)"
+      info "Enter the number of your choice:"
+      read THEME_TEMPLATE_CHOICE </dev/tty
+    else
+      # If THEME_TEMPLATE_REPO is set, assume custom template
+      THEME_TEMPLATE_CHOICE="3"
+    fi
+
+    # If custom template is chosen, ask for the GitHub repository URL
+    if [ "$THEME_TEMPLATE_CHOICE" = "3" ]; then
+      if [ -z "${THEME_TEMPLATE_REPO:-}" ]; then
+        info "Enter the GitHub repository URL for the custom theme template:"
+        read THEME_TEMPLATE_REPO </dev/tty
+      fi
+      if [ -z "$THEME_TEMPLATE_REPO" ]; then
+        error "Error: Repository URL cannot be empty."
+      fi
+    fi
+
+    # Create the option string for Shopify CLI based on the user's choice
+    case "$THEME_TEMPLATE_CHOICE" in
+      1)
+        THEME_OPTION=""
+        ;;
+      2)
+        THEME_OPTION="-u $HORIZON_THEME_URL"
+        ;;
+      3)
+        THEME_OPTION="-u $THEME_TEMPLATE_REPO"
+        ;;
+      *)
+        error "Error: Invalid theme template choice."
+        ;;
+    esac
+
     # Create the theme using Shopify CLI with the provided name
     info "Creating Shopify theme $(blue "$THEME_NAME")..."
-    npx @shopify/cli@latest theme init "$THEME_NAME"
+    npx @shopify/cli@latest theme init "$THEME_NAME" $THEME_OPTION
   fi
 
   # Navigate into the theme directory
@@ -276,13 +318,19 @@ if grep -q "tailwindcss" package.json; then
     error "Error: Unable to find Tailwind CSS input file in assets folder. Please ensure you have a Tailwind CSS file with 'tailwind' in its name inside the assets directory."
   fi
 
-  # Check the Tailwind CSS output file in theme.liquid layout
-  if ! grep -q "tailwind-output.css" "layout/theme.liquid"; then
-    info "Adding Tailwind CSS output file to layout/theme.liquid..."
+  # Check the Tailwind CSS output file presence in layout
+  if [ -f "snippets/stylesheets.liquid" ]; then
+    file_to_check="snippets/stylesheets.liquid"
+  else
+    file_to_check="layout/theme.liquid"
+  fi
+  
+  if ! grep -q "tailwind-output.css" "$file_to_check"; then
+    info "Adding Tailwind CSS output file to $file_to_check..."
     # Search for the first element containing "| asset_url | stylesheet_tag" and insert after it
     sed -i '' '1,/| asset_url | stylesheet_tag/ { /| asset_url | stylesheet_tag/ a\
     {{ "tailwind-output.css" | asset_url | stylesheet_tag }}
-    }' layout/theme.liquid
+    }' "$file_to_check"
   fi
 fi
 

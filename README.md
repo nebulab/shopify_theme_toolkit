@@ -27,6 +27,7 @@ You can pass the following environment variables to customize the installation:
 - `PNPM_VERSION`: Specify a pnpm version (default: latest)
 - `USE_CURRENT_DIR`: Set to `true` to skip theme scaffolding and install in the current directory.
 - `STORE_URL`: It can be the store prefix (example) or the full myshopify.com URL (example.myshopify.com, https://example.myshopify.com).
+- `THEME_TEMPLATE_REPO`: A custom GitHub repository URL for the theme template.
 
 Examples:
 
@@ -40,6 +41,10 @@ curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/
 
 ```sh
 curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | STORE_URL=example-dev-store bash -s
+```
+
+```sh
+curl https://raw.githubusercontent.com/nebulab/shopify_theme_toolkit/refs/heads/main/install.sh | THEME_TEMPLATE_REPO=https://github.com/Shopify/horizon bash -s
 ```
 
 ## Features
