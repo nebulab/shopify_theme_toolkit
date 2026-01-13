@@ -334,6 +334,31 @@ if grep -q "tailwindcss" package.json; then
   fi
 fi
 
+# Create .gitignore file if it doesn't exist
+if [ ! -f .gitignore ]; then
+  info "Creating $(blue ".gitignore") file..."
+  touch .gitignore
+  echo "# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+node_modules/
+
+# Shopify CLI files
+.shopify/
+
+## Release files
+release
+*.zip
+.env
+" >> .gitignore
+fi
+
 info "$(green "Installation complete!") 🎉"
 if [ "${USE_CURRENT_DIR:-}" = "true" ]; then
   info "To start the development server run 👉: $(green "bin/dev")"
