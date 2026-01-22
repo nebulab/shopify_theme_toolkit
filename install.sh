@@ -285,7 +285,7 @@ if [ -f Procfile.dev ]; then
   info "$(blue "Procfile.dev") already exists. Skipping creation."
 else
   touch Procfile.dev
-  echo "web: pnpm shopify theme dev" >> Procfile.dev
+  echo "web: pnpm shopify theme dev --host localhost" >> Procfile.dev
   info "$(blue "Procfile.dev") created successfully."
 fi
 
