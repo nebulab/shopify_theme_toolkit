@@ -11,6 +11,9 @@ jobs:
         with:
           store: ${{ secrets.SHOP_STORE }}
           access_token: ${{ secrets.SHOP_ACCESS_TOKEN }}
+          password: ${{ secrets.SHOP_PASSWORD }}
+          product_handle: ${{ vars.SHOP_PRODUCT_HANDLE }}
+          collection_handle: ${{ vars.SHOP_COLLECTION_HANDLE }}
           lhci_github_app_token: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           lhci_min_score_performance: 0.9
           lhci_min_score_accessibility: 0.9
