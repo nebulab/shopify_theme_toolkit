@@ -78,3 +78,9 @@ The following secrets need to be added to your GitHub repository for the workflo
 - `LHCI_GITHUB_APP_TOKEN`: [Lighthouse GitHub app](https://github.com/apps/lighthouse-ci) token. Install the app on your repository to generate the token.
 - `SHOPIFY_CLI_THEME_TOKEN`: Your Shopify CLI theme token. Follow https://shopify.dev/docs/storefronts/themes/tools/cli/ci-cd#step-1-get-a-theme-access-password-for-the-store
 
+### Optional Secrets and Variables
+The Lighthouse CI workflow accepts the following optional inputs:
+- `SHOP_PASSWORD` (secret): Storefront password for password-protected stores.
+- `SHOP_PRODUCT_HANDLE` (variable): Handle of the product page to audit. When set, the action skips the Admin API call used to look up the first published product, so `SHOP_ACCESS_TOKEN` no longer needs the `read_products` scope (a Theme Access token is enough).
+- `SHOP_COLLECTION_HANDLE` (variable): Handle of the collection page to audit. Same effect as above for the collection lookup.
+
