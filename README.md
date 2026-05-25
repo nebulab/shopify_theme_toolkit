@@ -1,5 +1,7 @@
 # ShopifyThemeToolkit
 
+> **⚠️ Archived** — This repository is no longer maintained. It has been superseded by [nebulab/skills-internal](https://github.com/nebulab/skills-internal). Please use that project instead.
+
 Shopify Theme Toolkit is a comprehensive solution for modern Shopify theme development. It enables you to quickly scaffold new themes or enhance existing ones with automated workflows, version management, and best practices. The toolkit configures Ruby and pnpm versioning, integrates the Shopify CLI and Foreman for local development, and adds ready-to-use GitHub Actions for theme checking, performance audits, and PR previews. Optional Tailwind CSS setup is included, with automatic build integration and theme.liquid injection. Ideal for individuals and teams, this toolkit ensures your themes are production-ready, CI/CD-friendly, and easy to maintain.
 
 ## Requirements
